@@ -26,20 +26,21 @@ class BlazingBoard {
 
         while(currPlayer) {
             if(currPlayer.username !== this.activePlayer.username) {
-                let code = randomInt(1,13)
-                let color = randomInt(0,3)
+                let code = this.randomInt(1,13)
+                let color = this.randomInt(0,3)
                 currPlayer.cardPush(code, color)
             }
             currPlayer = currPlayer.next;
         }
     }
 
-    setCard(card) {
+    setCard(card, pos) {
         // reverse Card
         if(card.code === 14) {
             this.activeCard = card;
             // reverse and swap card with next person
             this.swapCards(this.activePlayer, this.nextPlayer())
+            this.activePlayer.removedCard(pos)
             this.nextMove()
             return;
         }
@@ -51,6 +52,8 @@ class BlazingBoard {
         // if card color is same or code is same;
         if((card.color === this.activeCard.color) || (card.code === this.activeCard.code)) {
             this.activeCard = card;
+            // Remove card if its shuffled
+            this.activePlayer.removedCard(pos)
 
             // Skip one player in current direction
             if(card.code === 11) {
