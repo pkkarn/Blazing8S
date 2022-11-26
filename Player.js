@@ -26,7 +26,7 @@ export default class Player {
     init() {
         for(let i = 0; i < 4; i++) {
             let randomCardCode = this.ramdomInt(1,14);
-            let randomCardColorCode = this.ramdomInt(0, 3)
+            let randomCardColorCode = this.ramdomInt(0, 4)
 
             this.cardPush(randomCardCode, randomCardColorCode)
         }

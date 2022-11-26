@@ -6,7 +6,7 @@ class BlazingBoard {
         this.lastPlayer = null;
         this.activePlayer = null;
         this.moveType = 'next'
-        this.activeCard = new Card(this.randomInt(1,14), this.randomInt(0,3));
+        this.activeCard = new Card(this.randomInt(1,14), this.randomInt(0,4));
         this.initPlayers(players);
     }
 
@@ -27,20 +27,38 @@ class BlazingBoard {
         while(currPlayer) {
             if(currPlayer.username !== this.activePlayer.username) {
                 let code = this.randomInt(1,13)
-                let color = this.randomInt(0,3)
+                let color = this.randomInt(0,4)
                 currPlayer.cardPush(code, color)
             }
             currPlayer = currPlayer.next;
         }
     }
 
-    setCard(card, pos) {
+    pass() {
+        this.nextMove()
+    }
+
+    fetchCard() {
+        let code = this.randomInt(1,14)
+        let color = this.randomInt(0,4)
+        this.activePlayer.cardPush(code, color)
+    }
+
+    setCard(card, pos, choice) {
         // reverse Card
         if(card.code === 14) {
             this.activeCard = card;
             // reverse and swap card with next person
-            this.swapCards(this.activePlayer, this.nextPlayer())
             this.activePlayer.removedCard(pos)
+            this.swapCards(this.activePlayer, this.nextPlayer())
+            this.nextMove()
+            return;
+        }
+
+        if(card.code === 8) {
+            this.activePlayer.removedCard(pos)
+            let card = new Card(8, choice)
+            this.activeCard = card;
             this.nextMove()
             return;
         }
@@ -87,6 +105,8 @@ class BlazingBoard {
             this.firstPlayer = newPlayer;
             this.lastPlayer = newPlayer;
 
+            this.status = 1
+
             this.activePlayer = this.firstPlayer
         } else {
             newPlayer.prev = this.lastPlayer
@@ -129,7 +149,9 @@ class BlazingBoard {
     }
 
     nextMove() {
+        this.activePlayer.status = 0;
         this.activePlayer = this.nextPlayer()
+        this.activePlayer.status = 1
     }
 
 
@@ -140,21 +162,5 @@ class BlazingBoard {
      * - Reverse move enable
      */
 }
-
-const game = new BlazingBoard(['pkkarn', 'ritesh', 'nischay', 'sourabh'])
-
-
-// setTimeout(() => {
-//     console.log(game.getPlayer('pkkarn').status)
-//     setTimeout(() => {
-//         console.log(game.getPlayer('pkkarn').status)
-//         setTimeout(() => {
-//             console.log(game.getPlayer('pkkarn').status)
-//         }, 7000)
-//     }, 2000)
-// }, 2000)
-
-console.log(game.activeCard)
-console.log(game.activePlayer.cards)
 
 export default BlazingBoard
