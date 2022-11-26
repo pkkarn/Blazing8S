@@ -156,3 +156,5 @@ const game = new BlazingBoard(['pkkarn', 'ritesh', 'nischay', 'sourabh'])
 
 console.log(game.activeCard)
 console.log(game.activePlayer.cards)
+
+export default BlazingBoard
