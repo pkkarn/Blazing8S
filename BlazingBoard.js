@@ -1,19 +1,33 @@
 import Player from './Player.js'
 import Card from './Card.js'
+
+/**
+This code is the implementation of the BlazingBoard class in JavaScript. The class is used to represent a BlazingBoard game,
+where players can play with cards. The class uses two other classes, Player and Card, to handle the players and the cards.
+**/
 class BlazingBoard {
     constructor(players) {
+        // this is the first player in the linked list of players
         this.firstPlayer = null; // 0 <-> 1 -> 2 - 3 next = null
+        // this is the last player in the linked list of players
         this.lastPlayer = null;
+        //  this is the current player that is playing
         this.activePlayer = null;
+        // this determines the direction of the next move
         this.moveType = 'next'
+        
+        //this is the current card that is in play
         this.activeCard = new Card(this.randomInt(1,14), this.randomInt(0,4));
         this.initPlayers(players);
     }
 
+    // eturns a random number between min and max
     randomInt(min, max) {
         return Math.floor(Math.random(min)*max) + min
     }
-
+    
+    
+    // swaps cards between two players
     swapCards(firstPlayer, secondPlayer) {
         let cardFirst = firstPlayer.cards;
         let cardSecond = secondPlayer.cards;
@@ -21,6 +35,7 @@ class BlazingBoard {
         firstPlayer.cards = cardSecond
     }
 
+    // adds one card to all players except the active player
     addOneCardToOthers() {
         let currPlayer = this.firstPlayer
 
@@ -34,16 +49,19 @@ class BlazingBoard {
         }
     }
 
+    // moves to the next player
     pass() {
         this.nextMove()
     }
 
+    //  fetches a random card for the active player
     fetchCard() {
         let code = this.randomInt(1,14)
         let color = this.randomInt(0,4)
         this.activePlayer.cardPush(code, color)
     }
-
+    
+    // sets the current card in play and performs the necessary actions depending on the card
     setCard(card, pos, choice) {
         // reverse Card
         if(card.code === 14) {
@@ -93,12 +111,15 @@ class BlazingBoard {
         }
     }
 
+    
+    // initializes the players in the linked list
     initPlayers(players) {
         players.forEach(player => {
             this.addPlayer(player);
         })
     }
 
+    // adds a player to the linked list of players
     addPlayer(player) {
         let newPlayer = new Player(player);
         if(!this.firstPlayer) {
@@ -115,6 +136,7 @@ class BlazingBoard {
         }
     }
 
+    // returns a player by the username
     getPlayer(username) {
         if(this.firstPlayer.username === username) return this.firstPlayer
         if(this.lastPlayer.username === username) return this.lastPlayer
@@ -129,6 +151,8 @@ class BlazingBoard {
         return null
     }
 
+    
+    // returns the next player in the linked list
     nextPlayer() {
         let nextPlayer = null
         if(this.moveType === 'next') {
@@ -148,6 +172,7 @@ class BlazingBoard {
         return nextPlayer
     }
 
+    // sets the next player as the active player
     nextMove() {
         this.activePlayer.status = 0;
         this.activePlayer = this.nextPlayer()
